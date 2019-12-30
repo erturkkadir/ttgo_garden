@@ -8,7 +8,7 @@
 TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
 
 const char* ssid = "golaks";
-const char* pass = "2125105291";
+const char* pass = "*********";
 const char* mqtt_server = "www.syshuman.com/broker";
 
 WiFiClient espClient;
