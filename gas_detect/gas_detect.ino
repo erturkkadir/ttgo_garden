@@ -8,6 +8,10 @@
 
 SGP30 mySensor;
 
+#define NO2 27
+#define NH3 26
+#define CO  25
+
 #define I2C_SGP30  0x58
 /*TFT_WHITE TFT_BLACK TFT_YELLOW TFT_RED TFT_GREEN TFT_BLUE*/
 
@@ -82,26 +86,44 @@ void setup() {
     while (1);
   }
   mySensor.initAirQuality();
-  connectToWiFi();
+  //connectToWiFi();
+  analogReadResolution(14);
+
+  pinMode(NO2,INPUT);
+  pinMode(NH3,INPUT);
+  pinMode(CO,INPUT);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   //tft.println("www.syshuman.com");
   
-  tft.setCursor(1, 20, 4); // font 4
   mySensor.measureAirQuality();
-  tft.println();
+  tft.setCursor(0, 20, 4); // font 4
   tft.print("CO2: ");
   tft.print(mySensor.CO2);
-  tft.print("  TVOC :");
+  tft.println();
+  
+  tft.setCursor(0, 60, 2); // font 4
+  tft.print("TVOC :");
   tft.print(mySensor.TVOC);
   mySensor.measureRawSignals();
   tft.println();
   tft.print("H2:");
   tft.print(mySensor.H2);
-  tft.print(" Eth:");
+  
+  tft.println();
+  tft.print("Eth:");
   tft.print(mySensor.ethanol);
+
+  tft.println();
+  int no2 = analogRead(NO2);
+  int nh3 = analogRead(NH3);
+  int co = analogRead(CO);
+  tft.print(" NO2: "); tft.print(no2);
+  tft.print(" NH3: "); tft.print(nh3);
+  tft.print(" CO: "); tft.print(co);
+  
  
   //client.publish("esp32/temperature", "1");
   //client.publish("esp32/humidity", "0");
