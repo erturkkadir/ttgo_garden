@@ -25,6 +25,12 @@ WiFiClient espClient;
 
 PubSubClient client(espClient);
 
+uint32_t getAbsoluteHumidity(float temperature, float humidity) {
+  float absoluteHumidity = 213.7f * (humidity / 100.0f) * 6.112f * exp((17.62f * temperature) / (243.12f + temperature)) / (273.15f + temperature);
+  uint32_t scaledHumidity = (uint32_t) (1000.0f * absoluteHumidity); 
+  return scaledHumidity;
+}
+
 void callback(char* topic, byte* message, unsigned int length) {
   Serial.print("Message arrived on topic: ");
   Serial.print(topic);
@@ -97,32 +103,34 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   //tft.println("www.syshuman.com");
-  
+
+  mySensor.setHumidity(8200);
+ 
   mySensor.measureAirQuality();
   tft.setCursor(0, 20, 4); // font 4
-  tft.print("CO2: ");
-  tft.print(mySensor.CO2);
+  tft.print("CO2 : ");
+  tft.printf("%4d ", mySensor.CO2);
   tft.println();
   
   tft.setCursor(0, 60, 2); // font 4
-  tft.print("TVOC :");
-  tft.print(mySensor.TVOC);
+  tft.print("TVOC : ");
+  tft.printf("%4d", mySensor.TVOC);
   mySensor.measureRawSignals();
   tft.println();
-  tft.print("H2:");
-  tft.print(mySensor.H2);
+  tft.print("H2   : ");
+  tft.printf("%4d", mySensor.H2);
   
   tft.println();
-  tft.print("Eth:");
-  tft.print(mySensor.ethanol);
+  tft.print("Eth  : ");
+  tft.printf("%4d", mySensor.ethanol);
 
   tft.println();
   int no2 = analogRead(NO2);
   int nh3 = analogRead(NH3);
   int co = analogRead(CO);
-  tft.print(" NO2: "); tft.print(no2);
-  tft.print(" NH3: "); tft.print(nh3);
-  tft.print(" CO: "); tft.print(co);
+  tft.print("NO2 : "); tft.print(no2);
+  tft.print(" NH3 : "); tft.print(nh3);
+  tft.print(" CO  : "); tft.print(co);
   
  
   //client.publish("esp32/temperature", "1");
